@@ -4,17 +4,17 @@ pipeline {
   stages {
     stage('Terraform') {
       steps {
-        sh 'cd /var/lib/jenkins/cwork && terraform init && terraform apply -auto-approve'
+        sh 'cd /var/lib/jenkins/lessonCert && terraform init && terraform apply -auto-approve'
       }
     }
     stage('sh') {
       steps {
-        sh 'cd /var/lib/jenkins/cwork && bash sh'
+        sh 'cd /var/lib/jenkins/lessonCert && bash sh'
       }
     }
     stage('ansible') {
       steps {
-        sh 'cd /var/lib/jenkins/cwork && ansible-playbook ap.yml -u user'
+        sh 'cd /var/lib/jenkins/lessonCert && ansible-playbook ap.yml -u user'
       }
     }
   }

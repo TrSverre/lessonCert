@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "yandex" {
-  token     = "y0_AgAAAAAO1GhRAATuwQAAAADwfbjiwVF7KSoART-TAOluuX1KvBwTwxk"
+  token     = ""
   cloud_id  = "b1g6o30rad2hkh87j34f"
   folder_id = "b1gum68ifoa9fbhijk7v"
   zone = "ru-central1-a"
@@ -53,18 +53,6 @@ resource "yandex_compute_instance" "vm-1" {
   scheduling_policy {
     preemptible = true 
   }
-  connection {
-    type     = "ssh"
-    user     = "user"
-    private_key = file("/var/lib/jenkins/.ssh/id_rsa")
-    host = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
-  }
-  
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",     
-    ]
-  }
 }
 
 resource "yandex_compute_disk" "hddvm1" {
@@ -73,6 +61,43 @@ resource "yandex_compute_disk" "hddvm1" {
   image_id = data.yandex_compute_image.ubuntu_image.id
   size = 15
 }
-output "ip1" {
-  value = yandex_compute_instance.prod.network_interface.0.nat_ip_address
+
+resource "yandex_compute_instance" "vm-2" {
+  name = var.paramsvm.namevm2
+ # id = var.paramsvm.namevm1
+  allow_stopping_for_update = true
+  resources {
+    cores  = var.paramsvm.cor2
+    memory = var.paramsvm.mem2
+  }
+
+  boot_disk {
+    disk_id =  yandex_compute_disk.hddvm2.id
+  }
+
+  network_interface {
+    subnet_id = "e9bohr7qvj70b390umrp"
+    nat       = true
+  }
+
+  metadata = {
+    user-data = "${file("./user.yml")}"
+  }
+  scheduling_policy {
+    preemptible = true 
+  }
+}
+
+resource "yandex_compute_disk" "hddvm2" {
+  type     = "network-hdd"
+  zone     = "ru-central1-a"
+  image_id = data.yandex_compute_image.ubuntu_image.id
+  size = 15
+}
+
+output "ipbild" {
+  value = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
+}
+output "ipprod" {
+  value = yandex_compute_instance.vm-2.network_interface.0.nat_ip_address
 }

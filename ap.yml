@@ -1,0 +1,80 @@
+- name: inst docker
+  hosts: all
+  become: true
+
+  tasks:
+  - name: apt update
+    apt:
+      update_cache: yes
+
+  - name: inst pip3
+    apt:
+      name: python3-pip
+      state: present
+
+  - name: inst requests
+    become: true
+    pip:
+      name: requests
+      executable: pip3
+
+  - name: inst docker-py
+    become: true
+    pip:
+      name: docker-py
+      state: present
+
+  - name: inst apt docker is present
+    apt:
+      name: docker.io
+      state: present
+
+  - name: Ensure docker is started
+    service:
+      name: docker
+      state: started
+
+- name: building
+  hosts: bild
+  become: true   
+  
+  tasks:
+  - name: copy dockerfile
+    copy:
+      src: /var/lib/jenkins/cwork/dockerfile
+      dest: /home/user
+
+  - name: docker build 
+    become: true
+    docker_image:
+      path: /home/user
+      name: prob1
+      tag: latest
+  
+  - name: tag image in repo
+    become: true
+    docker_image:
+      name: prob1
+      tag: latest
+      repository: cr.yandex/crpoghe3r1eougaqqmpj/prob1
+      push: yes
+
+- name: run in prod
+  hosts: prod
+  become: true
+
+  tasks:
+  - name: pull image
+    become: true
+    docker_image:
+      name: cr.yandex/crpoghe3r1eougaqqmpj/prob1
+      tag: latest
+
+  - name: Run 
+    become: true
+    docker_container:
+      name: prod
+      image: cr.yandex/crpoghe3r1eougaqqmpj/prob1
+      state: started
+      ports:
+        - "8080:8080"
