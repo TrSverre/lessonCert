@@ -53,6 +53,12 @@ resource "yandex_compute_instance" "vm-1" {
   scheduling_policy {
     preemptible = true 
   }
+  connection {
+    type     = "ssh"
+    user     = "user"
+    private_key = file("/var/lib/jenkins/.ssh/id_rsa")
+    host = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
+  }
 }
 
 resource "yandex_compute_disk" "hddvm1" {
@@ -85,6 +91,12 @@ resource "yandex_compute_instance" "vm-2" {
   }
   scheduling_policy {
     preemptible = true 
+  }
+  connection {
+    type     = "ssh"
+    user     = "user"
+    private_key = file("/var/lib/jenkins/.ssh/id_rsa")
+    host = yandex_compute_instance.vm-2.network_interface.0.nat_ip_address
   }
 }
 
