@@ -1,0 +1,13 @@
+#cloud-config
+datasource:
+ Ec2:
+  strict_id: false
+ssh_pwauth: no
+users:
+- name: user
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICAp7cHJUBf4Nk/cJoUX7e5m6Hch7As/tfmT9Xnzh2Sc sverre\sverre@Sverre
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDMWCuz7yaM4ggTmS1BknnzeKbMhXOMzWiNyrQtIEKSZobDfoTl5LUkYkq7jPwQvXSJ7Rf+xfGq7w/pYJx4ktoy8/ChXAaCIKI8qiEgrqvB8TmdYENsHXWDMu/PWF8qN7ds1ZVqkWTdWnikXdImEgDK9KD1tBesxO0tIduDey+7iDi3dHh/07yO4gv6lPmbe1RUUw4erBrGVSplNp7uNPDZoyISBTr0xzCPmyopWijp77blTqT1ajVH4W7b9lGJEK6LkTQU4uCxhJ/0uyH3JOozv/CQjDl74Fpbw0BfsFaoFNxqtYP95pVuXEF/KytmCPrQ6IFUw6OW3IRotQuFlYzUrhWrdB2lDEfvmI2qsv5ml5zcyhowt2xY/RHER+s1ioyH03Uw1DcoWxcvuvEiAeIIUnQ+6wF5BZKO+bz42aQyAtmJIJlGlLiZPIG74uYp1zy+7iU91BqnAQBmQ22EtoMkbXdcYZeU76uRvfrjxGJAJFVT6+LK13R5S4TQe55GL0= jenkins@jenki
+runcmd: []

@@ -1,0 +1,21 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Terraform') {
+      steps {
+        sh 'cd /var/lib/jenkins/cwork && terraform init && terraform apply -auto-approve'
+      }
+    }
+    stage('sh') {
+      steps {
+        sh 'cd /var/lib/jenkins/cwork && bash sh'
+      }
+    }
+    stage('ansible') {
+      steps {
+        sh 'cd /var/lib/jenkins/cwork && ansible-playbook ap.yml -u user'
+      }
+    }
+  }
+}
